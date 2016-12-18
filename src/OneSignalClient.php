@@ -114,21 +114,25 @@ class OneSignalClient
         $this->sendNotificationCustom($params);
     }
 
-    public function sendNotificationToAll($message, $headings, $url = null, $data = null, $buttons = null) {
+    public function sendNotificationToAll($message, $title = null, $url = null, $data = null, $buttons = null) {
         $contents = array(
             "en" => $message
         );
-        $headings = array(
-            "en" => $headings
-        );
+        $heading = ($title == null) ? " " : $title;
+        $headings =  array(
+                "en" => $heading
+                );
+        $subtitle = array(
+                "en"=> $heading
+                );
 
         $params = array(
             'app_id' => $this->appId,
             'contents' => $contents,
             'headings' => $headings,
+            'subtitle' => $subtitle,
             'included_segments' => array('All')
         );
-
         if (isset($url)) {
             $params['url'] = $url;
         }
@@ -140,7 +144,7 @@ class OneSignalClient
         if (isset($button)) {
             $params['buttons'] = $buttons;
         }
-
+        //dd($params);
         $this->sendNotificationCustom($params);
     }
 
