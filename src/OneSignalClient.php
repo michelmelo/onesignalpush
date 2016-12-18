@@ -1,6 +1,6 @@
 <?php
 
-namespace Berkayk\OneSignal;
+namespace MichelMelo\OneSignal;
 
 use GuzzleHttp\Client;
 
