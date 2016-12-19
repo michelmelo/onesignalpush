@@ -241,7 +241,60 @@ class OneSignalClient
         $this->headers['body'] = json_encode($parameters);
 
         $method = strtolower($method);
+
         return $this->{$method}($endpoint);
+    }
+    /**
+     * Get a set of Players from an App
+     *
+     * @param string $app_id Application ID
+     * @param int    $limit
+     * @param int    $offset
+     * @return \Psr\Http\Message\ResponseInterface OneSignal API response
+     */
+    public function getPlayers($app_id = '', $limit = 300, $offset = 0)
+    {
+        $this->requiresAuth();
+        $this->usesJSON();
+        //$headers = $this->headerInit(false, true);
+        if ($app_id == '') {
+            $app_id = $this->appId;
+        }
+        $data = ["app_id" => $app_id];
+        if ($limit) {
+            $data[ 'limit' ] = $limit;
+        }
+        if ($offset) {
+            $data[ 'offset' ] = $offset;
+        }
+        $headers[ 'query' ] = $data;
+        //dd($headers );
+        $parameters['app_id'] = $this->appId;
+        
+        return $this->get("players", $headers);
+    }
+
+    protected function get($endPoint, $headers = [])
+    {
+        $this->requiresAuth();
+        $this->usesJSON();
+        $parameters = array_merge($headers, $this->headers);
+        //dd(self::API_URL . "/" . $endPoint .'?app_id='. $this->appId);
+        
+        $url = self::API_URL . "/" . $endPoint.'?app_id='. $this->appId;
+        $res = $this->client->request('GET', $url, $this->headers);
+        
+        $resposta = array();
+        //echo $res->getHeaderLine('content-type');
+        $resposta = json_decode($res->getBody());
+        //dd($resposta);
+
+        //echo $res->getBody();
+
+        //$response = $this->getDevices(); 
+       // dd("".$res->getBody());
+        //$response->getBody();
+        return $resposta;
     }
 
     public function post($endPoint) {
